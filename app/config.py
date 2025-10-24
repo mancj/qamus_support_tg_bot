@@ -44,6 +44,21 @@ class RedisConfig:
 
 
 @dataclass
+class OpenAIConfig:
+    """
+    Data class representing the configuration for OpenAI.
+
+    Attributes:
+    - API_KEY (str): The OpenAI API key.
+    - MODEL (str): The OpenAI model to use (e.g., gpt-4o-mini, gpt-4o).
+    - KNOWLEDGE_BASE_PATH (str): Path to the knowledge base JSON file.
+    """
+    API_KEY: str
+    MODEL: str
+    KNOWLEDGE_BASE_PATH: str
+
+
+@dataclass
 class Config:
     """
     Data class representing the overall configuration for the application.
@@ -51,9 +66,11 @@ class Config:
     Attributes:
     - bot (BotConfig): The bot configuration.
     - redis (RedisConfig): The Redis configuration.
+    - openai (OpenAIConfig): The OpenAI configuration.
     """
     bot: BotConfig
     redis: RedisConfig
+    openai: OpenAIConfig
 
 
 def load_config() -> Config:
@@ -76,5 +93,10 @@ def load_config() -> Config:
             HOST=env.str("REDIS_HOST"),
             PORT=env.int("REDIS_PORT"),
             DB=env.int("REDIS_DB"),
+        ),
+        openai=OpenAIConfig(
+            API_KEY=env.str("OPENAI_API_KEY"),
+            MODEL=env.str("OPENAI_MODEL", "gpt-4o-mini"),
+            KNOWLEDGE_BASE_PATH=env.str("OPENAI_KNOWLEDGE_BASE_PATH", "knowledge_base.json"),
         ),
     )
